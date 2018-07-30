@@ -2,6 +2,7 @@ itk_module_test()
 
 set(BSplineGradientTests
   itkImageToPointSetFilterTest.cxx
+  itkImageToImageOfVectorsFilterTest.cxx
   )
 
 CreateTestDriver(BSplineGradient "${BSplineGradient-Test_LIBRARIES}" "${BSplineGradientTests}")
@@ -11,4 +12,11 @@ itk_add_test(NAME itkImageToPointSetFilterTest
   itkImageToPointSetFilterTest
     DATA{Input/foot.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkImageToPointSetFilterTestOutput.vtk
+  )
+
+itk_add_test(NAME itkImageToImageOfVectorsFilterTest
+  COMMAND BSplineGradientTestDriver
+  itkImageToImageOfVectorsFilterTest
+    DATA{Input/foot.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkImageToImageOfVectorsFilterTestOutput.mha
   )
