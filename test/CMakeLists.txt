@@ -4,6 +4,7 @@ set(BSplineGradientTests
   itkImageToPointSetFilterTest.cxx
   itkImageToImageOfVectorsFilterTest.cxx
   itkBSplineScatteredDataPointSetToGradientImageFilterTest.cxx
+  itkBSplineApproximationGradientImageFilterTest.cxx
   )
 
 CreateTestDriver(BSplineGradient "${BSplineGradient-Test_LIBRARIES}" "${BSplineGradientTests}")
@@ -27,4 +28,11 @@ itk_add_test(NAME itkBSplineScatteredDataPointSetToGradientImageFilterTest
   itkBSplineScatteredDataPointSetToGradientImageFilterTest
     DATA{Input/foot.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkBSplineScatteredDataPointSetToGradientImageFilterTestGradientMagnitudeOutput.mha
+  )
+
+itk_add_test(NAME itkBSplineApproximationGradientImageFilterTest
+  COMMAND BSplineGradientTestDriver
+  itkBSplineApproximationGradientImageFilterTest
+    DATA{Input/foot.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBSplineApproximationGradientImageFilterTest
   )
