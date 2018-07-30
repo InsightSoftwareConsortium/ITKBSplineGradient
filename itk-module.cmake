@@ -16,10 +16,12 @@ itk_module(BSplineGradient
     ITKCommon
     ITKMesh
   COMPILE_DEPENDS
+    ITKImageGrid
   TEST_DEPENDS
     ITKTestKernel
     ITKMetaIO
     ITKIOMeshVTK
+    ITKImageGradient
   DESCRIPTION
     "${DOCUMENTATION}"
   EXCLUDE_FROM_DEFAULT
