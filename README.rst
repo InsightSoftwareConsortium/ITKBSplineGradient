@@ -7,8 +7,8 @@ ITKBSplineGradient
 .. |TravisCI| image:: https://travis-ci.org/InsightSoftwareConsortium/ITKBSplineGradient.svg?branch=master
     :target: https://travis-ci.org/InsightSoftwareConsortium/ITKBSplineGradient
 
-.. |AppVeyor| image:: https://img.shields.io/appveyor/ci/thewtex/itkbsplinegradient.svg
-    :target: https://ci.appveyor.com/project/thewtex/itkbsplinegradient
+.. |AppVeyor| image:: https://img.shields.io/appveyor/ci/itkrobot/itkbsplinegradient.svg
+    :target: https://ci.appveyor.com/project/itkrobot/itkbsplinegradient
 
 =========== =========== ===========
    Linux      macOS       Windows
