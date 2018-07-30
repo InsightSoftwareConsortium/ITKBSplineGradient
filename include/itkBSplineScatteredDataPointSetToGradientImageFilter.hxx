@@ -20,9 +20,9 @@
 
 #include "itkBSplineScatteredDataPointSetToGradientImageFilter.h"
 
-
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkNeighborhoodAlgorithm.h" // face calculator
+#include "itkMath.h"
 
 namespace itk
 {
@@ -48,6 +48,7 @@ BSplineScatteredDataPointSetToGradientImageFilter< TInputPointSet, TOutputValueT
     }
   this->m_NumberOfLevels.Fill(1);
 }
+
 
 template< typename TInputPointSet, typename TOutputValueType >
 void
@@ -114,6 +115,13 @@ BSplineScatteredDataPointSetToGradientImageFilter< TInputPointSet, TOutputValueT
   DataObjectPointerArray            outputs = this->GetOutputs();
   typename OutputImageType::Pointer output0 = this->GetOutput();
 
+  typename BSplineControlPointImageFunctionType::Pointer bspliner = BSplineControlPointImageFunctionType::New();
+  bspliner->SetSplineOrder( this->m_BSplineScatteredDataFilter->GetSplineOrder() );
+  bspliner->SetSize( this->m_BSplineScatteredDataFilter->GetSize() );
+  bspliner->SetSpacing( this->m_BSplineScatteredDataFilter->GetSpacing() );
+  bspliner->SetOrigin( this->m_BSplineScatteredDataFilter->GetOrigin() );
+  bspliner->SetInputImage( this->m_BSplineScatteredDataFilter->GetPhiLattice() );
+
   typedef typename itk::ImageRegionIteratorWithIndex< OutputImageType >
   OutputIteratorType;
   InternalGradientType                      gradient;
@@ -132,7 +140,7 @@ BSplineScatteredDataPointSetToGradientImageFilter< TInputPointSet, TOutputValueT
   typename OutputImageType::SpacingType ctrlPointSpacing;
   for( i = 0; i < ImageDimension; ++i )
     {
-    ctrlPointSpacing[i] = static_cast< double >( sizeMinus1[i] ) * spacing[i] / 
+    ctrlPointSpacing[i] = static_cast< double >( sizeMinus1[i] ) * spacing[i] /
       static_cast< double >( m_NumberOfControlPoints[i] * vcl_pow( 2., static_cast< int >( m_NumberOfLevels[i] - 1 ) ) - 1.0 );
     }
 
@@ -160,7 +168,7 @@ BSplineScatteredDataPointSetToGradientImageFilter< TInputPointSet, TOutputValueT
     {
     index = outIts[0].GetIndex();
     output0->TransformIndexToPhysicalPoint( index, point );
-    m_BSplineScatteredDataFilter->EvaluateGradientAtPoint( point , gradient );
+    gradient = bspliner->EvaluateGradient( point );
     for( i = 0; i < InputVectorDimension; ++i )
       {
       for( j = 0; j < ImageDimension; ++j )
@@ -198,7 +206,7 @@ BSplineScatteredDataPointSetToGradientImageFilter< TInputPointSet, TOutputValueT
           }
         }
       output0->TransformIndexToPhysicalPoint( index, point );
-      m_BSplineScatteredDataFilter->EvaluateGradientAtPoint( point , gradient );
+      gradient = bspliner->EvaluateGradient( point );
       for( i = 0; i < InputVectorDimension; ++i )
         {
         for( j = 0; j < ImageDimension; ++j )
