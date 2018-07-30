@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(BSplineGradient)
 
-set(BSplineGradient_LIBRARIES BSplineGradient)
-
 if(NOT ITK_SOURCE_DIR)
   find_package(ITK REQUIRED)
   list(APPEND CMAKE_MODULE_PATH ${ITK_CMAKE_DIR})
