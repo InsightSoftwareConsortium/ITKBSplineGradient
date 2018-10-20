@@ -122,8 +122,7 @@ BSplineScatteredDataPointSetToGradientImageFilter< TInputPointSet, TOutputValueT
   bspliner->SetOrigin( this->m_BSplineScatteredDataFilter->GetOrigin() );
   bspliner->SetInputImage( this->m_BSplineScatteredDataFilter->GetPhiLattice() );
 
-  typedef typename itk::ImageRegionIteratorWithIndex< OutputImageType >
-  OutputIteratorType;
+  using OutputIteratorType = typename itk::ImageRegionIteratorWithIndex< OutputImageType >;
   InternalGradientType                      gradient;
   OutputPixelType                           gradientPixel;
   typename OutputImageType::PointType       point;
@@ -147,8 +146,8 @@ BSplineScatteredDataPointSetToGradientImageFilter< TInputPointSet, TOutputValueT
   // We check to make sure we not ad the boundary of the image, because we get
   // weird edge effects and sometime we try to evaluate outside the BSpline
   // grid.
-  typedef typename NeighborhoodAlgorithm::
-    ImageBoundaryFacesCalculator< OutputImageType > FaceCalculatorType;
+  using FaceCalculatorType = typename NeighborhoodAlgorithm::
+    ImageBoundaryFacesCalculator< OutputImageType >;
   FaceCalculatorType faceCalculator;
   typename FaceCalculatorType::RadiusType radius;
   radius.Fill( 1 );

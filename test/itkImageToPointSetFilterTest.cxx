@@ -32,20 +32,19 @@ int itkImageToPointSetFilterTest( int argc, char *argv[] )
     }
 
   const unsigned int Dimension = 2;
-  typedef float                              PixelType;
-  typedef itk::Image< PixelType, Dimension > InputImageType;
-  typedef itk::Mesh<  PixelType, Dimension > OutputMeshType;
+  using PixelType = float;
+  using InputImageType = itk::Image< PixelType, Dimension >;
+  using OutputMeshType = itk::Mesh<  PixelType, Dimension >;
 
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::ImageToPointSetFilter< InputImageType, OutputMeshType >
-    FilterType;
+  using FilterType = itk::ImageToPointSetFilter< InputImageType, OutputMeshType >;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput(0, reader->GetOutput() );
 
-  typedef itk::MeshFileWriter< OutputMeshType > WriterType;
+  using WriterType = itk::MeshFileWriter< OutputMeshType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetInput( filter->GetOutput() );
   writer->SetFileName( argv[2] );

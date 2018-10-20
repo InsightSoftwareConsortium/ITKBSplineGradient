@@ -70,7 +70,7 @@ ImageToImageOfVectorsFilter< TInputImage, NComponents >
   ImageRegionIterator< OutputImageType > oit( outputImage, outputRegionForThread );
   oit.GoToBegin();
 
-  typedef ImageRegionConstIterator< InputImageType > InputIteratorType;
+  using InputIteratorType = ImageRegionConstIterator< InputImageType >;
   std::vector< InputIteratorType * > inputItContainer;
 
   for ( unsigned int i = 0; i < NComponents; i++ )

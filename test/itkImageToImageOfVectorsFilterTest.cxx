@@ -31,20 +31,19 @@ int itkImageToImageOfVectorsFilterTest( int argc, char *argv[] )
     }
 
   const unsigned int Dimension = 2;
-  typedef float                              PixelType;
-  typedef itk::Image< PixelType, Dimension > InputImageType;
+  using PixelType = float;
+  using InputImageType = itk::Image< PixelType, Dimension >;
 
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::ImageToImageOfVectorsFilter< InputImageType, 2 >
-    FilterType;
+  using FilterType = itk::ImageToImageOfVectorsFilter< InputImageType, 2 >;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( 0, reader->GetOutput() );
   filter->SetInput( 1, reader->GetOutput() );
 
-  typedef itk::ImageFileWriter< FilterType::OutputImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< FilterType::OutputImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetInput( filter->GetOutput() );
   writer->SetFileName( argv[2] );
