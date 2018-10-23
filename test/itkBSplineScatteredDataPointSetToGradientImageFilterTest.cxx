@@ -35,17 +35,17 @@ int itkBSplineScatteredDataPointSetToGradientImageFilterTest( int argc, char *ar
     }
 
   const unsigned int Dimension = 2;
-  typedef float                              PixelType;
-  typedef itk::Image< PixelType, Dimension > InputImageType;
+  using PixelType = float;
+  using InputImageType = itk::Image< PixelType, Dimension >;
 
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::ImageToImageOfVectorsFilter< InputImageType, 1 > ImageToVectorImageFilterType;
+  using ImageToVectorImageFilterType = itk::ImageToImageOfVectorsFilter< InputImageType, 1 >;
   ImageToVectorImageFilterType::Pointer imageToVI = ImageToVectorImageFilterType::New();
   imageToVI->SetInput( 0, reader->GetOutput() );
-  typedef ImageToVectorImageFilterType::OutputImageType VectorImageType;
+  using VectorImageType = ImageToVectorImageFilterType::OutputImageType;
   try
     {
     reader->UpdateOutputInformation();
@@ -58,16 +58,15 @@ int itkBSplineScatteredDataPointSetToGradientImageFilterTest( int argc, char *ar
     }
 
 
-  typedef itk::Mesh< VectorImageType::PixelType, Dimension > MeshType;
-  typedef InputImageType                                     OutputImageType;
+  using MeshType = itk::Mesh< VectorImageType::PixelType, Dimension >;
+  using OutputImageType = InputImageType;
 
-  typedef itk::ImageToPointSetFilter< VectorImageType, MeshType >
-    ImageToPointSetType;
+  using ImageToPointSetType = itk::ImageToPointSetFilter< VectorImageType, MeshType >;
   ImageToPointSetType::Pointer imageToPointSet = ImageToPointSetType::New();
   imageToPointSet->SetInput( 0, imageToVI->GetOutput() );
 
-  typedef itk::BSplineScatteredDataPointSetToGradientImageFilter< MeshType,
-                                                                  PixelType >  PointSetToGradientFilterType;
+  using PointSetToGradientFilterType =
+    itk::BSplineScatteredDataPointSetToGradientImageFilter< MeshType, PixelType >;
   PointSetToGradientFilterType::Pointer pointSetToGradient = PointSetToGradientFilterType::New();
   pointSetToGradient->SetInput( imageToPointSet->GetOutput() );
   pointSetToGradient->SetOrigin( reader->GetOutput()->GetOrigin() );
@@ -78,12 +77,12 @@ int itkBSplineScatteredDataPointSetToGradientImageFilterTest( int argc, char *ar
   pointSetToGradient->SetNumberOfControlPoints( ncps );
   pointSetToGradient->SetNumberOfLevels( 3 );
 
-  typedef itk::VectorMagnitudeImageFilter< PointSetToGradientFilterType::OutputImageType,
-                                               OutputImageType > GradientMagnitudeFilterType;
+  using GradientMagnitudeFilterType = itk::VectorMagnitudeImageFilter<
+    PointSetToGradientFilterType::OutputImageType, OutputImageType >;
   GradientMagnitudeFilterType::Pointer gradientMagnitude = GradientMagnitudeFilterType::New();
   gradientMagnitude->SetInput( pointSetToGradient->GetOutput() );
 
-  typedef itk::ImageFileWriter< OutputImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< OutputImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetInput( gradientMagnitude->GetOutput() );
   writer->SetFileName( argv[2] );

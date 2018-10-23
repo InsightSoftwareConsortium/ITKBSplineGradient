@@ -33,18 +33,18 @@ int itkBSplineApproximationGradientImageFilterTest( int argc, char* argv[] )
     }
 
   const unsigned int Dimension = 2;
-  typedef float                              PixelType;
-  typedef itk::Image< PixelType, Dimension > InputImageType;
-  typedef InputImageType                     OutputImageType;
+  using PixelType = float;
+  using InputImageType = itk::Image< PixelType, Dimension >;
+  using OutputImageType = InputImageType;
 
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::ImageToImageOfVectorsFilter< InputImageType, 1 > ImageToVectorImageFilterType;
+  using ImageToVectorImageFilterType = itk::ImageToImageOfVectorsFilter< InputImageType, 1 >;
   ImageToVectorImageFilterType::Pointer imageToVI = ImageToVectorImageFilterType::New();
   imageToVI->SetInput( 0, reader->GetOutput() );
-  typedef ImageToVectorImageFilterType::OutputImageType VectorImageType;
+  using VectorImageType = ImageToVectorImageFilterType::OutputImageType;
   try
     {
     reader->UpdateOutputInformation();
@@ -56,24 +56,23 @@ int itkBSplineApproximationGradientImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
 
-  typedef itk::BSplineApproximationGradientImageFilter< VectorImageType, float >
-    GradientImageFilterType;
+  using GradientImageFilterType = itk::BSplineApproximationGradientImageFilter< VectorImageType, float >;
   GradientImageFilterType::Pointer  gradientImageFilter = GradientImageFilterType::New();
   gradientImageFilter->SetInput( imageToVI->GetOutput() );
   gradientImageFilter->SetNumberOfLevels( 1 );
   gradientImageFilter->SetControlPointSpacingRatio( 2.0 );
 
-  typedef itk::VectorMagnitudeImageFilter< GradientImageFilterType::OutputImageType,
-                                               OutputImageType > GradientMagnitudeFilterType;
+  using GradientMagnitudeFilterType = itk::VectorMagnitudeImageFilter<
+    GradientImageFilterType::OutputImageType, OutputImageType >;
   GradientMagnitudeFilterType::Pointer gradientMagnitude = GradientMagnitudeFilterType::New();
   gradientMagnitude->SetInput( gradientImageFilter->GetOutput() );
 
-  typedef itk::ImageFileWriter< OutputImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< OutputImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetInput( gradientMagnitude->GetOutput() );
   writer->SetFileName( std::string( argv[2] ) + "GradientMagnitudeOutput.mha" );
 
-  typedef itk::ImageFileWriter< GradientImageFilterType::OutputImageType > FullWriterType;
+  using FullWriterType = itk::ImageFileWriter< GradientImageFilterType::OutputImageType >;
   FullWriterType::Pointer fullWriter = FullWriterType::New();
   fullWriter->SetInput( gradientImageFilter->GetOutput() );
   fullWriter->SetFileName( std::string( argv[2] ) + "GradientOutput.mha" );
