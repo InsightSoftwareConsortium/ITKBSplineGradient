@@ -1,5 +1,5 @@
 ITKBSplineGradient
-=================================
+==================
 
 .. |CircleCI| image:: https://circleci.com/gh/InsightSoftwareConsortium/ITKBSplineGradient.svg?style=shield
     :target: https://circleci.com/gh/InsightSoftwareConsortium/ITKBSplineGradient
@@ -16,6 +16,15 @@ ITKBSplineGradient
 |CircleCI|  |TravisCI|  |AppVeyor|
 =========== =========== ===========
 
-Approximate an image's gradient from a b-spline fit to its intensity.
 
-ITK is an open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis. Developed through extreme programming methodologies, ITK employs leading-edge algorithms for registering and segmenting multidimensional scientific images.
+Overview
+--------
+
+Approximate an image's gradient from a B-spline fit to its intensity.
+
+
+License
+-------
+
+This software is distributed under the Apache 2.0 license. Please see the
+*LICENSE* file for details.
