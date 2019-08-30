@@ -1,21 +1,9 @@
 ITKBSplineGradient
 ==================
 
-.. |CircleCI| image:: https://circleci.com/gh/InsightSoftwareConsortium/ITKBSplineGradient.svg?style=shield
-    :target: https://circleci.com/gh/InsightSoftwareConsortium/ITKBSplineGradient
-
-.. |TravisCI| image:: https://travis-ci.org/InsightSoftwareConsortium/ITKBSplineGradient.svg?branch=master
-    :target: https://travis-ci.org/InsightSoftwareConsortium/ITKBSplineGradient
-
-.. |AppVeyor| image:: https://img.shields.io/appveyor/ci/itkrobot/itkbsplinegradient.svg
-    :target: https://ci.appveyor.com/project/itkrobot/itkbsplinegradient
-
-=========== =========== ===========
-   Linux      macOS       Windows
-=========== =========== ===========
-|CircleCI|  |TravisCI|  |AppVeyor|
-=========== =========== ===========
-
+.. image:: https://dev.azure.com/ITKBSplineGradient/ITKBSplineGradient/_apis/build/status/InsightSoftwareConsortium.ITKBSplineGradient?branchName=master
+    :target: https://dev.azure.com/ITKBSplineGradient/ITKBSplineGradient/_build/latest?definitionId=1&branchName=master
+    :alt: Build status
 
 Overview
 --------
