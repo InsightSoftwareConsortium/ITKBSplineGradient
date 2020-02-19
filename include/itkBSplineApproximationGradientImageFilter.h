@@ -30,7 +30,7 @@ namespace itk
 {
 
 /** \class BSplineApproximationGradientImageFilter
- * 
+ *
  * \brief Uses a B-spline approximation to an Image to calculate a gradient
  * image.
  *
@@ -40,71 +40,72 @@ namespace itk
  * \sa BSplineScatteredDataPointSetToGradientImageFilter
  * \sa Vector
  * \sa CovariantVector
- * 
+ *
  * \ingroup BSplineGradient
  */
-template< typename TInputImage, typename TOutputValueType >
-class ITK_TEMPLATE_EXPORT BSplineApproximationGradientImageFilter:
-  public ImageToImageFilter< TInputImage,
-                             Image< CovariantVector< TOutputValueType,
-                                                     TInputImage::ImageDimension >,
-                                    TInputImage::ImageDimension > >
+template <typename TInputImage, typename TOutputValueType>
+class ITK_TEMPLATE_EXPORT BSplineApproximationGradientImageFilter
+  : public ImageToImageFilter<
+      TInputImage,
+      Image<CovariantVector<TOutputValueType, TInputImage::ImageDimension>, TInputImage::ImageDimension>>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(BSplineApproximationGradientImageFilter);
 
-  itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 
   using Self = BSplineApproximationGradientImageFilter;
 
   using InputImageType = TInputImage;
-  using OutputImageType = Image< CovariantVector< TOutputValueType, ImageDimension >, ImageDimension >;
+  using OutputImageType = Image<CovariantVector<TOutputValueType, ImageDimension>, ImageDimension>;
   using OutputImagePointer = typename OutputImageType::Pointer;
 
-  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
-  itkTypeMacro( BSplineApproximationGradientImageFilter, ImageToImageFilter );
+  itkTypeMacro(BSplineApproximationGradientImageFilter, ImageToImageFilter);
 
   using OutputValueType = TOutputValueType;
   using InputPixelType = typename InputImageType::PixelType;
-  using PointSetType = PointSet< InputPixelType, itkGetStaticConstMacro(ImageDimension) >;
+  using PointSetType = PointSet<InputPixelType, itkGetStaticConstMacro(ImageDimension)>;
 
-  itkStaticConstMacro( InputVectorDimension, unsigned int, InputPixelType::Dimension );
+  itkStaticConstMacro(InputVectorDimension, unsigned int, InputPixelType::Dimension);
 
   /** Internal filter type */
   /** Internal filter type */
-  using PointSetToGradientFilterType = BSplineScatteredDataPointSetToGradientImageFilter< PointSetType, OutputValueType >;
+  using PointSetToGradientFilterType = BSplineScatteredDataPointSetToGradientImageFilter<PointSetType, OutputValueType>;
   using PointSetToGradientFilterPointerType = typename PointSetToGradientFilterType::Pointer;
   using ArrayType = typename PointSetToGradientFilterType::ArrayType;
-  using MeshType = Mesh< InputPixelType, ImageDimension >;
-  using ImageToPointSetFilterType = ImageToPointSetFilter< InputImageType, MeshType >;
+  using MeshType = Mesh<InputPixelType, ImageDimension>;
+  using ImageToPointSetFilterType = ImageToPointSetFilter<InputImageType, MeshType>;
   using ImageToPointSetFilterPointerType = typename ImageToPointSetFilterType::Pointer;
 
-  using ControlPointSpacingRatioType = FixedArray< double, itkGetStaticConstMacro(ImageDimension) >;
+  using ControlPointSpacingRatioType = FixedArray<double, itkGetStaticConstMacro(ImageDimension)>;
 
   /** Set/Get number of levels.  This is the number of levels used in the
    * BSplineScatteredDataPointSetToImageFilter for calculating the BSpline grid.
    * */
-  void SetNumberOfLevels( const unsigned int levels )
-    {
+  void
+  SetNumberOfLevels(const unsigned int levels)
+  {
     this->m_NumberOfLevels.Fill(levels);
     this->Modified();
-    }
-  itkSetMacro( NumberOfLevels, ArrayType );
-  itkGetConstReferenceMacro( NumberOfLevels, ArrayType );
+  }
+  itkSetMacro(NumberOfLevels, ArrayType);
+  itkGetConstReferenceMacro(NumberOfLevels, ArrayType);
 
   /** Set/Get the order of the BSpline in each direction. */
-  void SetSplineOrder( const unsigned int order )
-    {
-    this->m_SplineOrder.Fill( order );
+  void
+  SetSplineOrder(const unsigned int order)
+  {
+    this->m_SplineOrder.Fill(order);
     this->Modified();
-    }
-  itkSetMacro( SplineOrder, ArrayType );
-  itkGetConstReferenceMacro( SplineOrder, ArrayType );
+  }
+  itkSetMacro(SplineOrder, ArrayType);
+  itkGetConstReferenceMacro(SplineOrder, ArrayType);
 
   /** Set/Get the ratio of the approximating B-spline control point spacing to
    * to the input image spacing in each direction.  Note that this will result
@@ -119,40 +120,43 @@ public:
    * l      = number of levels
    *
    */
-  void SetControlPointSpacingRatio( const double & ratio )
-    {
-    this->m_ControlPointSpacingRatio.Fill( ratio );
+  void
+  SetControlPointSpacingRatio(const double & ratio)
+  {
+    this->m_ControlPointSpacingRatio.Fill(ratio);
     this->Modified();
-    }
-  itkSetMacro( ControlPointSpacingRatio, ControlPointSpacingRatioType );
-  itkGetConstReferenceMacro( ControlPointSpacingRatio, ControlPointSpacingRatioType );
+  }
+  itkSetMacro(ControlPointSpacingRatio, ControlPointSpacingRatioType);
+  itkGetConstReferenceMacro(ControlPointSpacingRatio, ControlPointSpacingRatioType);
 
 protected:
   BSplineApproximationGradientImageFilter();
   virtual ~BSplineApproximationGradientImageFilter() {}
 
   /** Needs everything. */
-  void GenerateInputRequestedRegion() override;
+  void
+  GenerateInputRequestedRegion() override;
 
   /** This filter produces the LargestPossibleRegion. */
-  void EnlargeOutputRequestedRegion( DataObject * data ) override;
+  void
+  EnlargeOutputRequestedRegion(DataObject * data) override;
 
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
 private:
   ImageToPointSetFilterPointerType    m_ImageToPointSetFilter;
   PointSetToGradientFilterPointerType m_PointSetToGradientFilter;
 
-  ArrayType    m_NumberOfLevels;
-  ArrayType    m_SplineOrder;
+  ArrayType m_NumberOfLevels;
+  ArrayType m_SplineOrder;
 
   ControlPointSpacingRatioType m_ControlPointSpacingRatio;
-
 };
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBSplineApproximationGradientImageFilter.hxx"
+#  include "itkBSplineApproximationGradientImageFilter.hxx"
 #endif
 
 #endif

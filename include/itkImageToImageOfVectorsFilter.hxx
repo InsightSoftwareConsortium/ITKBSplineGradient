@@ -25,81 +25,76 @@
 namespace itk
 {
 
-template< typename TInputImage, unsigned int NComponents >
-ImageToImageOfVectorsFilter< TInputImage, NComponents >
-::ImageToImageOfVectorsFilter()
+template <typename TInputImage, unsigned int NComponents>
+ImageToImageOfVectorsFilter<TInputImage, NComponents>::ImageToImageOfVectorsFilter()
 {
   // At least 1 input is required.
-  this->SetNumberOfRequiredInputs( 1 );
+  this->SetNumberOfRequiredInputs(1);
 }
 
-template< typename TInputImage, unsigned int NComponents >
+template <typename TInputImage, unsigned int NComponents>
 void
-ImageToImageOfVectorsFilter< TInputImage, NComponents >
-::BeforeThreadedGenerateData()
+ImageToImageOfVectorsFilter<TInputImage, NComponents>::BeforeThreadedGenerateData()
 {
   RegionType region;
 
-  for ( unsigned int i = 0; i < NComponents; i++ )
+  for (unsigned int i = 0; i < NComponents; i++)
+  {
+    InputImageType * input = static_cast<InputImageType *>(this->ProcessObject::GetInput(i));
+    if (!input)
     {
-    InputImageType *input = static_cast< InputImageType * >(
-        this->ProcessObject::GetInput(i) );
-    if ( !input )
-      {
       itkExceptionMacro(<< "Input " << i << " not set!");
-      }
-    if ( i == 0 )
-      {
-      region = input->GetLargestPossibleRegion();
-      }
-    else if ( input->GetLargestPossibleRegion() != region )
-      {
-      itkExceptionMacro(<< "All Inputs must have the same dimensions.");
-      }
     }
+    if (i == 0)
+    {
+      region = input->GetLargestPossibleRegion();
+    }
+    else if (input->GetLargestPossibleRegion() != region)
+    {
+      itkExceptionMacro(<< "All Inputs must have the same dimensions.");
+    }
+  }
 }
 
-template< typename TInputImage, unsigned int NComponents >
+template <typename TInputImage, unsigned int NComponents>
 void
-ImageToImageOfVectorsFilter< TInputImage, NComponents >
-::DynamicThreadedGenerateData( const RegionType & outputRegionForThread )
+ImageToImageOfVectorsFilter<TInputImage, NComponents>::DynamicThreadedGenerateData(
+  const RegionType & outputRegionForThread)
 {
-  typename OutputImageType::Pointer outputImage =
-    static_cast< OutputImageType * >( this->ProcessObject::GetOutput(0) );
+  typename OutputImageType::Pointer outputImage = static_cast<OutputImageType *>(this->ProcessObject::GetOutput(0));
 
-  ImageRegionIterator< OutputImageType > oit( outputImage, outputRegionForThread );
+  ImageRegionIterator<OutputImageType> oit(outputImage, outputRegionForThread);
   oit.GoToBegin();
 
-  using InputIteratorType = ImageRegionConstIterator< InputImageType >;
-  std::vector< InputIteratorType * > inputItContainer;
+  using InputIteratorType = ImageRegionConstIterator<InputImageType>;
+  std::vector<InputIteratorType *> inputItContainer;
 
-  for ( unsigned int i = 0; i < NComponents; i++ )
-    {
+  for (unsigned int i = 0; i < NComponents; i++)
+  {
     typename InputImageType::Pointer inputImagePointer =
-      static_cast< InputImageType * >( this->ProcessObject::GetInput(i) );
+      static_cast<InputImageType *>(this->ProcessObject::GetInput(i));
 
-    InputIteratorType *iit = new InputIteratorType(
-      inputImagePointer, outputRegionForThread);
+    InputIteratorType * iit = new InputIteratorType(inputImagePointer, outputRegionForThread);
     iit->GoToBegin();
     inputItContainer.push_back(iit);
-    }
+  }
 
   typename OutputImageType::PixelType pix;
-  while ( !oit.IsAtEnd() )
+  while (!oit.IsAtEnd())
+  {
+    for (unsigned int i = 0; i < NComponents; i++)
     {
-    for ( unsigned int i = 0; i < NComponents; i++ )
-      {
       pix[i] = inputItContainer[i]->Get();
-      ++( *inputItContainer[i] );
-      }
+      ++(*inputItContainer[i]);
+    }
     oit.Set(pix);
     ++oit;
-    }
+  }
 
-  for ( unsigned int i = 0; i < NComponents; i++ )
-    {
+  for (unsigned int i = 0; i < NComponents; i++)
+  {
     delete inputItContainer[i];
-    }
+  }
 }
 
 } // end namespace itk

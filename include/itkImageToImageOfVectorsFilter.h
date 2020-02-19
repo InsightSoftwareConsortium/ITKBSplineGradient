@@ -48,52 +48,57 @@ namespace itk
  *
  * \ingroup BSplineGradient
  */
-template< typename TInputImage, unsigned int NComponents = 3 >
-class ITK_TEMPLATE_EXPORT ImageToImageOfVectorsFilter :
-  public ImageToImageFilter< TInputImage,
-                             Image< Vector< typename TInputImage::InternalPixelType,
-                                            NComponents >, TInputImage::ImageDimension > >
+template <typename TInputImage, unsigned int NComponents = 3>
+class ITK_TEMPLATE_EXPORT ImageToImageOfVectorsFilter
+  : public ImageToImageFilter<
+      TInputImage,
+      Image<Vector<typename TInputImage::InternalPixelType, NComponents>, TInputImage::ImageDimension>>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(ImageToImageOfVectorsFilter);
 
-  using Superclass = ImageToImageFilter< TInputImage,
-                             Image< Vector< typename TInputImage::InternalPixelType,
-                                            NComponents >, TInputImage::ImageDimension > >;
+  using Superclass = ImageToImageFilter<
+    TInputImage,
+    Image<Vector<typename TInputImage::InternalPixelType, NComponents>, TInputImage::ImageDimension>>;
   using Self = ImageToImageOfVectorsFilter;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
-  itkNewMacro( Self );
-  itkTypeMacro( ImageToImageOfVectorsFilter, ImageToImageFilter );
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
+  itkNewMacro(Self);
+  itkTypeMacro(ImageToImageOfVectorsFilter, ImageToImageFilter);
 
   using InputImageType = TInputImage;
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 
   using InputPixelType = typename InputImageType::InternalPixelType;
 
-  using OutputPixelType = Vector< InputPixelType, NComponents >;
-  using OutputImageType = Image< OutputPixelType, ImageDimension >;
+  using OutputPixelType = Vector<InputPixelType, NComponents>;
+  using OutputImageType = Image<OutputPixelType, ImageDimension>;
   using RegionType = typename OutputImageType::RegionType;
 
   using DataObjectPointerArraySizeType = typename Superclass::DataObjectPointerArraySizeType;
 
-  virtual void SetNthInput(DataObjectPointerArraySizeType idx, const InputImageType *inputImage)
-  { this->SetInput(idx, inputImage); }
+  virtual void
+  SetNthInput(DataObjectPointerArraySizeType idx, const InputImageType * inputImage)
+  {
+    this->SetInput(idx, inputImage);
+  }
 
 protected:
   ImageToImageOfVectorsFilter();
   virtual ~ImageToImageOfVectorsFilter() {}
 
-  void BeforeThreadedGenerateData() override;
+  void
+  BeforeThreadedGenerateData() override;
 
-  void DynamicThreadedGenerateData(const RegionType & outputRegionForThread) override;
+  void
+  DynamicThreadedGenerateData(const RegionType & outputRegionForThread) override;
 
 private:
 };
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageToImageOfVectorsFilter.hxx"
+#  include "itkImageToImageOfVectorsFilter.hxx"
 #endif
 
 #endif

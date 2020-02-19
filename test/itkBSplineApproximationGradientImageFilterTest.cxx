@@ -22,72 +22,73 @@
 #include "itkBSplineApproximationGradientImageFilter.h"
 #include "itkImageToImageOfVectorsFilter.h"
 
-int itkBSplineApproximationGradientImageFilterTest( int argc, char* argv[] )
+int
+itkBSplineApproximationGradientImageFilterTest(int argc, char * argv[])
 {
-  if ( argc < 3 )
-    {
+  if (argc < 3)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImage outputImage ";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   const unsigned int Dimension = 2;
   using PixelType = float;
-  using InputImageType = itk::Image< PixelType, Dimension >;
+  using InputImageType = itk::Image<PixelType, Dimension>;
   using OutputImageType = InputImageType;
 
-  using ReaderType = itk::ImageFileReader< InputImageType >;
+  using ReaderType = itk::ImageFileReader<InputImageType>;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( argv[1] );
+  reader->SetFileName(argv[1]);
 
-  using ImageToVectorImageFilterType = itk::ImageToImageOfVectorsFilter< InputImageType, 1 >;
+  using ImageToVectorImageFilterType = itk::ImageToImageOfVectorsFilter<InputImageType, 1>;
   ImageToVectorImageFilterType::Pointer imageToVI = ImageToVectorImageFilterType::New();
-  imageToVI->SetInput( 0, reader->GetOutput() );
+  imageToVI->SetInput(0, reader->GetOutput());
   using VectorImageType = ImageToVectorImageFilterType::OutputImageType;
   try
-    {
+  {
     reader->UpdateOutputInformation();
-    }
-  catch( itk::ExceptionObject& ex )
-    {
+  }
+  catch (itk::ExceptionObject & ex)
+  {
     std::cerr << "Exception caught!" << std::endl;
     std::cerr << ex << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
-  using GradientImageFilterType = itk::BSplineApproximationGradientImageFilter< VectorImageType, float >;
-  GradientImageFilterType::Pointer  gradientImageFilter = GradientImageFilterType::New();
-  gradientImageFilter->SetInput( imageToVI->GetOutput() );
-  gradientImageFilter->SetNumberOfLevels( 1 );
-  gradientImageFilter->SetControlPointSpacingRatio( 2.0 );
+  using GradientImageFilterType = itk::BSplineApproximationGradientImageFilter<VectorImageType, float>;
+  GradientImageFilterType::Pointer gradientImageFilter = GradientImageFilterType::New();
+  gradientImageFilter->SetInput(imageToVI->GetOutput());
+  gradientImageFilter->SetNumberOfLevels(1);
+  gradientImageFilter->SetControlPointSpacingRatio(2.0);
 
-  using GradientMagnitudeFilterType = itk::VectorMagnitudeImageFilter<
-    GradientImageFilterType::OutputImageType, OutputImageType >;
+  using GradientMagnitudeFilterType =
+    itk::VectorMagnitudeImageFilter<GradientImageFilterType::OutputImageType, OutputImageType>;
   GradientMagnitudeFilterType::Pointer gradientMagnitude = GradientMagnitudeFilterType::New();
-  gradientMagnitude->SetInput( gradientImageFilter->GetOutput() );
+  gradientMagnitude->SetInput(gradientImageFilter->GetOutput());
 
-  using WriterType = itk::ImageFileWriter< OutputImageType >;
+  using WriterType = itk::ImageFileWriter<OutputImageType>;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( gradientMagnitude->GetOutput() );
-  writer->SetFileName( std::string( argv[2] ) + "GradientMagnitudeOutput.mha" );
+  writer->SetInput(gradientMagnitude->GetOutput());
+  writer->SetFileName(std::string(argv[2]) + "GradientMagnitudeOutput.mha");
 
-  using FullWriterType = itk::ImageFileWriter< GradientImageFilterType::OutputImageType >;
+  using FullWriterType = itk::ImageFileWriter<GradientImageFilterType::OutputImageType>;
   FullWriterType::Pointer fullWriter = FullWriterType::New();
-  fullWriter->SetInput( gradientImageFilter->GetOutput() );
-  fullWriter->SetFileName( std::string( argv[2] ) + "GradientOutput.mha" );
+  fullWriter->SetInput(gradientImageFilter->GetOutput());
+  fullWriter->SetFileName(std::string(argv[2]) + "GradientOutput.mha");
 
   try
-    {
+  {
     writer->Update();
     fullWriter->Update();
-    }
-  catch( itk::ExceptionObject& ex )
-    {
+  }
+  catch (itk::ExceptionObject & ex)
+  {
     std::cerr << "Exception caught!" << std::endl;
     std::cerr << ex << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   return EXIT_SUCCESS;
 }

@@ -21,48 +21,49 @@
 
 #include "itkBSplineGradientImageFilter.h"
 
-int itkBSplineGradientImageFilterTest(int argc, char *argv[])
+int
+itkBSplineGradientImageFilterTest(int argc, char * argv[])
 {
-  if ( argc < 3 )
-    {
+  if (argc < 3)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImage outputImage ";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   const unsigned int Dimension = 2;
   using PixelType = float;
-  using InputImageType = itk::Image< PixelType, Dimension >;
+  using InputImageType = itk::Image<PixelType, Dimension>;
 
-  using ReaderType = itk::ImageFileReader< InputImageType >;
+  using ReaderType = itk::ImageFileReader<InputImageType>;
   ReaderType::Pointer reader = ReaderType::New();
 
-  using FilterType = itk::BSplineGradientImageFilter< InputImageType, PixelType >;
+  using FilterType = itk::BSplineGradientImageFilter<InputImageType, PixelType>;
   FilterType::Pointer filter = FilterType::New();
-  filter->SetInput( reader->GetOutput() );
-  reader->SetFileName( argv[1] );
+  filter->SetInput(reader->GetOutput());
+  reader->SetFileName(argv[1]);
 
   using GradientImageType = FilterType::OutputImageType;
-  using GradientMagnitudeFilterType = itk::VectorMagnitudeImageFilter< GradientImageType, InputImageType >;
+  using GradientMagnitudeFilterType = itk::VectorMagnitudeImageFilter<GradientImageType, InputImageType>;
   GradientMagnitudeFilterType::Pointer gradientMagnitude = GradientMagnitudeFilterType::New();
-  gradientMagnitude->SetInput( filter->GetOutput() );
+  gradientMagnitude->SetInput(filter->GetOutput());
 
-  using WriterType = itk::ImageFileWriter< InputImageType >;
+  using WriterType = itk::ImageFileWriter<InputImageType>;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( gradientMagnitude->GetOutput() );
-  writer->SetFileName( argv[2] );
+  writer->SetInput(gradientMagnitude->GetOutput());
+  writer->SetFileName(argv[2]);
 
   try
-    {
+  {
     writer->Update();
-    }
-  catch( itk::ExceptionObject& ex )
-    {
+  }
+  catch (itk::ExceptionObject & ex)
+  {
     std::cerr << "Exception caught!" << std::endl;
     std::cerr << ex << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   return EXIT_SUCCESS;
 }

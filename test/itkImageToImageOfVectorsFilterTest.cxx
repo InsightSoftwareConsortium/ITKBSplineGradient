@@ -20,44 +20,45 @@
 
 #include "itkImageToImageOfVectorsFilter.h"
 
-int itkImageToImageOfVectorsFilterTest( int argc, char *argv[] )
+int
+itkImageToImageOfVectorsFilterTest(int argc, char * argv[])
 {
-  if ( argc < 3 )
-    {
+  if (argc < 3)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImage outputImage ";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   const unsigned int Dimension = 2;
   using PixelType = float;
-  using InputImageType = itk::Image< PixelType, Dimension >;
+  using InputImageType = itk::Image<PixelType, Dimension>;
 
-  using ReaderType = itk::ImageFileReader< InputImageType >;
+  using ReaderType = itk::ImageFileReader<InputImageType>;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( argv[1] );
+  reader->SetFileName(argv[1]);
 
-  using FilterType = itk::ImageToImageOfVectorsFilter< InputImageType, 2 >;
+  using FilterType = itk::ImageToImageOfVectorsFilter<InputImageType, 2>;
   FilterType::Pointer filter = FilterType::New();
-  filter->SetInput( 0, reader->GetOutput() );
-  filter->SetInput( 1, reader->GetOutput() );
+  filter->SetInput(0, reader->GetOutput());
+  filter->SetInput(1, reader->GetOutput());
 
-  using WriterType = itk::ImageFileWriter< FilterType::OutputImageType >;
+  using WriterType = itk::ImageFileWriter<FilterType::OutputImageType>;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( filter->GetOutput() );
-  writer->SetFileName( argv[2] );
+  writer->SetInput(filter->GetOutput());
+  writer->SetFileName(argv[2]);
 
   try
-    {
+  {
     writer->Update();
-    }
-  catch( itk::ExceptionObject& ex )
-    {
+  }
+  catch (itk::ExceptionObject & ex)
+  {
     std::cerr << "Exception caught!" << std::endl;
     std::cerr << ex << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   return EXIT_SUCCESS;
 }
