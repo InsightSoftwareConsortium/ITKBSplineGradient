@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright Insight Software Consortium
+ *  Copyright NumFOCUS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
 namespace itk
 {
 /** \class BSplineScatteredDataPointSetToGradientImageFilter
- * 
+ *
  * \brief Uses a B-spline approximation to a PointSet to calculate a gradient
  * image.
  *
@@ -49,18 +49,18 @@ namespace itk
  *
  * \ingroup BSplineGradient
  */
-template< typename TInputPointSet, typename TOutputValueType >
-class BSplineScatteredDataPointSetToGradientImageFilter :
-  public PointSetToImageFilter< TInputPointSet,
-                                Image< CovariantVector< TOutputValueType, TInputPointSet::PointDimension >,
-                                       TInputPointSet::PointDimension > >
+template <typename TInputPointSet, typename TOutputValueType>
+class BSplineScatteredDataPointSetToGradientImageFilter
+  : public PointSetToImageFilter<
+      TInputPointSet,
+      Image<CovariantVector<TOutputValueType, TInputPointSet::PointDimension>, TInputPointSet::PointDimension>>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(BSplineScatteredDataPointSetToGradientImageFilter);
 
   /** Extract dimension from input image. */
-  itkStaticConstMacro( PointSetDimension, unsigned int, TInputPointSet::PointDimension );
-  itkStaticConstMacro( ImageDimension, unsigned int, TInputPointSet::PointDimension );
+  itkStaticConstMacro(PointSetDimension, unsigned int, TInputPointSet::PointDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TInputPointSet::PointDimension);
 
   /** Standard class type alias. */
   using Self = BSplineScatteredDataPointSetToGradientImageFilter;
@@ -68,64 +68,66 @@ public:
   /** Convenient type alias for simplifying declarations. */
   using InputPointSetType = TInputPointSet;
   using InputPointSetPointer = typename InputPointSetType::Pointer;
-  using OutputImageType = Image< CovariantVector< TOutputValueType, itkGetStaticConstMacro(ImageDimension) >,
-                 itkGetStaticConstMacro(ImageDimension) >;
+  using OutputImageType = Image<CovariantVector<TOutputValueType, itkGetStaticConstMacro(ImageDimension)>,
+                                itkGetStaticConstMacro(ImageDimension)>;
   using OutputImagePointer = typename OutputImageType::Pointer;
 
   /** Standard class type alias. */
-  using Superclass = PointSetToImageFilter< InputPointSetType, OutputImageType >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = PointSetToImageFilter<InputPointSetType, OutputImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineScatteredDataPointSetToGradientImageFilter, PointSetToImageFilter );
+  itkTypeMacro(BSplineScatteredDataPointSetToGradientImageFilter, PointSetToImageFilter);
 
   /** Image type alias support. */
   using InputPixelType = typename InputPointSetType::PixelType;
-  itkStaticConstMacro( InputVectorDimension, unsigned int, InputPixelType::Dimension );
+  itkStaticConstMacro(InputVectorDimension, unsigned int, InputPixelType::Dimension);
 
   using InputPointType = typename InputPointSetType::PointType;
   using OutputValueType = TOutputValueType;
-  using OutputPixelType = CovariantVector< OutputValueType, ImageDimension >;
+  using OutputPixelType = CovariantVector<OutputValueType, ImageDimension>;
   using OutputImageRegionType = typename OutputImageType::RegionType;
-  using InternalImageType = typename itk::Image< InputPixelType, ImageDimension >;
+  using InternalImageType = typename itk::Image<InputPixelType, ImageDimension>;
 
   /** Internal filter type. */
   using BSplineScatteredDataFilterType =
-    typename itk::BSplineScatteredDataPointSetToImageFilter< InputPointSetType, InternalImageType >;
+    typename itk::BSplineScatteredDataPointSetToImageFilter<InputPointSetType, InternalImageType>;
   using BSplineScatteredDataFilterPointerType = typename BSplineScatteredDataFilterType::Pointer;
 
   using ArrayType = typename BSplineScatteredDataFilterType::ArrayType;
 
-  using BSplineControlPointImageFunctionType = BSplineControlPointImageFunction< InternalImageType >;
+  using BSplineControlPointImageFunctionType = BSplineControlPointImageFunction<InternalImageType>;
 
-  void SetNumberOfLevels( unsigned int levels )
-    {
+  void
+  SetNumberOfLevels(unsigned int levels)
+  {
     this->m_NumberOfLevels.Fill(levels);
     this->Modified();
-    }
-  itkSetMacro( NumberOfLevels, ArrayType );
-  itkGetConstReferenceMacro( NumberOfLevels, ArrayType );
+  }
+  itkSetMacro(NumberOfLevels, ArrayType);
+  itkGetConstReferenceMacro(NumberOfLevels, ArrayType);
 
-  void SetSplineOrder( unsigned int order )
-    {
-    this->m_SplineOrder.Fill( order );
+  void
+  SetSplineOrder(unsigned int order)
+  {
+    this->m_SplineOrder.Fill(order);
     this->Modified();
-    }
-  itkSetMacro( SplineOrder, ArrayType );
-  itkGetConstReferenceMacro( SplineOrder, ArrayType );
+  }
+  itkSetMacro(SplineOrder, ArrayType);
+  itkGetConstReferenceMacro(SplineOrder, ArrayType);
 
-  itkSetMacro( NumberOfControlPoints, ArrayType );
-  itkGetConstReferenceMacro( NumberOfControlPoints, ArrayType );
+  itkSetMacro(NumberOfControlPoints, ArrayType);
+  itkGetConstReferenceMacro(NumberOfControlPoints, ArrayType);
 
   /** Set/Get the internal BSplineScatteredDataPointSetToImageFilter that is
    * used to the create the parametric B-spline representation.  Most of the
    * settings for this filter involve setting the options on this object. */
-  itkSetObjectMacro( BSplineScatteredDataFilter, BSplineScatteredDataFilterType );
-  itkGetModifiableObjectMacro( BSplineScatteredDataFilter, BSplineScatteredDataFilterType );
+  itkSetObjectMacro(BSplineScatteredDataFilter, BSplineScatteredDataFilterType);
+  itkGetModifiableObjectMacro(BSplineScatteredDataFilter, BSplineScatteredDataFilterType);
 
 
   /** Type of the outputs. */
@@ -138,13 +140,16 @@ protected:
   using InternalGradientType = typename BSplineControlPointImageFunctionType::GradientType;
 
   BSplineScatteredDataPointSetToGradientImageFilter();
-  virtual ~BSplineScatteredDataPointSetToGradientImageFilter() {}
+  ~BSplineScatteredDataPointSetToGradientImageFilter() override = default;
 
-  void GenerateOutputInformation() override;
+  void
+  GenerateOutputInformation() override;
 
-  void BeforeThreadedGenerateData() override;
+  void
+  BeforeThreadedGenerateData() override;
 
-  void DynamicThreadedGenerateData( const OutputImageRegionType & outputRegion ) override;
+  void
+  DynamicThreadedGenerateData(const OutputImageRegionType & outputRegion) override;
 
 private:
   BSplineScatteredDataFilterPointerType m_BSplineScatteredDataFilter;
@@ -152,12 +157,11 @@ private:
   ArrayType m_NumberOfControlPoints;
   ArrayType m_NumberOfLevels;
   ArrayType m_SplineOrder;
-
 };
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBSplineScatteredDataPointSetToGradientImageFilter.hxx"
+#  include "itkBSplineScatteredDataPointSetToGradientImageFilter.hxx"
 #endif
 
 #endif

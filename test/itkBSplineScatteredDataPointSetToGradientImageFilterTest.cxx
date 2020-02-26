@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright Insight Software Consortium
+ *  Copyright NumFOCUS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,79 +24,79 @@
 #include "itkImageToPointSetFilter.h"
 #include "itkImageToImageOfVectorsFilter.h"
 
-int itkBSplineScatteredDataPointSetToGradientImageFilterTest( int argc, char *argv[] )
+int
+itkBSplineScatteredDataPointSetToGradientImageFilterTest(int argc, char * argv[])
 {
-  if ( argc < 3 )
-    {
+  if (argc < 3)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImage outputImage ";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   const unsigned int Dimension = 2;
   using PixelType = float;
-  using InputImageType = itk::Image< PixelType, Dimension >;
+  using InputImageType = itk::Image<PixelType, Dimension>;
 
-  using ReaderType = itk::ImageFileReader< InputImageType >;
+  using ReaderType = itk::ImageFileReader<InputImageType>;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( argv[1] );
+  reader->SetFileName(argv[1]);
 
-  using ImageToVectorImageFilterType = itk::ImageToImageOfVectorsFilter< InputImageType, 1 >;
+  using ImageToVectorImageFilterType = itk::ImageToImageOfVectorsFilter<InputImageType, 1>;
   ImageToVectorImageFilterType::Pointer imageToVI = ImageToVectorImageFilterType::New();
-  imageToVI->SetInput( 0, reader->GetOutput() );
+  imageToVI->SetInput(0, reader->GetOutput());
   using VectorImageType = ImageToVectorImageFilterType::OutputImageType;
   try
-    {
+  {
     reader->UpdateOutputInformation();
-    }
-  catch( itk::ExceptionObject& ex )
-    {
+  }
+  catch (itk::ExceptionObject & ex)
+  {
     std::cerr << "Exception caught!" << std::endl;
     std::cerr << ex << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
 
-  using MeshType = itk::Mesh< VectorImageType::PixelType, Dimension >;
+  using MeshType = itk::Mesh<VectorImageType::PixelType, Dimension>;
   using OutputImageType = InputImageType;
 
-  using ImageToPointSetType = itk::ImageToPointSetFilter< VectorImageType, MeshType >;
+  using ImageToPointSetType = itk::ImageToPointSetFilter<VectorImageType, MeshType>;
   ImageToPointSetType::Pointer imageToPointSet = ImageToPointSetType::New();
-  imageToPointSet->SetInput( 0, imageToVI->GetOutput() );
+  imageToPointSet->SetInput(0, imageToVI->GetOutput());
 
-  using PointSetToGradientFilterType =
-    itk::BSplineScatteredDataPointSetToGradientImageFilter< MeshType, PixelType >;
+  using PointSetToGradientFilterType = itk::BSplineScatteredDataPointSetToGradientImageFilter<MeshType, PixelType>;
   PointSetToGradientFilterType::Pointer pointSetToGradient = PointSetToGradientFilterType::New();
-  pointSetToGradient->SetInput( imageToPointSet->GetOutput() );
-  pointSetToGradient->SetOrigin( reader->GetOutput()->GetOrigin() );
-  pointSetToGradient->SetSpacing( reader->GetOutput()->GetSpacing() );
-  pointSetToGradient->SetSize( reader->GetOutput()->GetLargestPossibleRegion().GetSize() );
+  pointSetToGradient->SetInput(imageToPointSet->GetOutput());
+  pointSetToGradient->SetOrigin(reader->GetOutput()->GetOrigin());
+  pointSetToGradient->SetSpacing(reader->GetOutput()->GetSpacing());
+  pointSetToGradient->SetSize(reader->GetOutput()->GetLargestPossibleRegion().GetSize());
   PointSetToGradientFilterType::ArrayType ncps;
-  ncps.Fill( 16 );
-  pointSetToGradient->SetNumberOfControlPoints( ncps );
-  pointSetToGradient->SetNumberOfLevels( 3 );
+  ncps.Fill(16);
+  pointSetToGradient->SetNumberOfControlPoints(ncps);
+  pointSetToGradient->SetNumberOfLevels(3);
 
-  using GradientMagnitudeFilterType = itk::VectorMagnitudeImageFilter<
-    PointSetToGradientFilterType::OutputImageType, OutputImageType >;
+  using GradientMagnitudeFilterType =
+    itk::VectorMagnitudeImageFilter<PointSetToGradientFilterType::OutputImageType, OutputImageType>;
   GradientMagnitudeFilterType::Pointer gradientMagnitude = GradientMagnitudeFilterType::New();
-  gradientMagnitude->SetInput( pointSetToGradient->GetOutput() );
+  gradientMagnitude->SetInput(pointSetToGradient->GetOutput());
 
-  using WriterType = itk::ImageFileWriter< OutputImageType >;
+  using WriterType = itk::ImageFileWriter<OutputImageType>;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( gradientMagnitude->GetOutput() );
-  writer->SetFileName( argv[2] );
+  writer->SetInput(gradientMagnitude->GetOutput());
+  writer->SetFileName(argv[2]);
 
   try
-    {
+  {
     writer->Update();
-    }
-  catch( itk::ExceptionObject& ex )
-    {
+  }
+  catch (itk::ExceptionObject & ex)
+  {
     std::cerr << "Exception caught!" << std::endl;
     std::cerr << ex << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   return EXIT_SUCCESS;
 }

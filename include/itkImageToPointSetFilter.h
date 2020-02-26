@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright Insight Software Consortium
+ *  Copyright NumFOCUS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,17 +34,17 @@ namespace itk
  *
  * \ingroup BSplineGradient
  */
-template< typename TInputImage, typename TOutputMesh >
-class ITK_TEMPLATE_EXPORT ImageToPointSetFilter: public ImageToMeshFilter< TInputImage, TOutputMesh >
+template <typename TInputImage, typename TOutputMesh>
+class ITK_TEMPLATE_EXPORT ImageToPointSetFilter : public ImageToMeshFilter<TInputImage, TOutputMesh>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(ImageToPointSetFilter);
 
   /** Standard class type alias. */
   using Self = ImageToPointSetFilter;
-  using Superclass = ImageToMeshFilter< TInputImage, TOutputMesh >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = ImageToMeshFilter<TInputImage, TOutputMesh>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -77,10 +77,11 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 
 protected:
-  ImageToPointSetFilter() {}
-  virtual ~ImageToPointSetFilter() {}
+  ImageToPointSetFilter() = default;
+  ~ImageToPointSetFilter() override = default;
 
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
 private:
 };
@@ -88,7 +89,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageToPointSetFilter.hxx"
+#  include "itkImageToPointSetFilter.hxx"
 #endif
 
 #endif

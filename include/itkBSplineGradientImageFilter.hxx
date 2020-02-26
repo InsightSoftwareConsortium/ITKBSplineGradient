@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright Insight Software Consortium
+ *  Copyright NumFOCUS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,88 +25,77 @@
 namespace itk
 {
 
-template< typename TInputImage, typename TOutputValueType,
-          typename TCoordRep, typename TCoefficientType >
-BSplineGradientImageFilter< TInputImage, TOutputValueType,
-                            TCoordRep, TCoefficientType >
-::BSplineGradientImageFilter()
-{
-}
+template <typename TInputImage, typename TOutputValueType, typename TCoordRep, typename TCoefficientType>
+BSplineGradientImageFilter<TInputImage, TOutputValueType, TCoordRep, TCoefficientType>::BSplineGradientImageFilter() =
+  default;
 
 
-template< typename TInputImage, typename TOutputValueType,
-          typename TCoordRep, typename TCoefficientType >
+template <typename TInputImage, typename TOutputValueType, typename TCoordRep, typename TCoefficientType>
 void
-BSplineGradientImageFilter< TInputImage, TOutputValueType,
-                            TCoordRep, TCoefficientType >
-::GenerateInputRequestedRegion()
+BSplineGradientImageFilter<TInputImage, TOutputValueType, TCoordRep, TCoefficientType>::GenerateInputRequestedRegion()
 {
   // this filter requires the all of the input image to be in
   // the buffer
-  InputImagePointer inputPtr = const_cast< InputImageType * >( this->GetInput() );
+  InputImagePointer inputPtr = const_cast<InputImageType *>(this->GetInput());
 
-  if ( inputPtr )
-    {
+  if (inputPtr)
+  {
     inputPtr->SetRequestedRegionToLargestPossibleRegion();
-    }
+  }
 }
 
 
-template< typename TInputImage, typename TOutputValueType,
-          typename TCoordRep, typename TCoefficientType >
+template <typename TInputImage, typename TOutputValueType, typename TCoordRep, typename TCoefficientType>
 void
-BSplineGradientImageFilter< TInputImage, TOutputValueType,
-                            TCoordRep, TCoefficientType >
-::EnlargeOutputRequestedRegion( DataObject *output)
+BSplineGradientImageFilter<TInputImage, TOutputValueType, TCoordRep, TCoefficientType>::EnlargeOutputRequestedRegion(
+  DataObject * output)
 {
   // this filter requires the all of the output image to be in
   // the buffer
-  OutputImageType *imgData;
+  OutputImageType * imgData;
 
-  imgData = dynamic_cast< OutputImageType * >( output );
-  if ( imgData )
-    {
+  imgData = dynamic_cast<OutputImageType *>(output);
+  if (imgData)
+  {
     imgData->SetRequestedRegionToLargestPossibleRegion();
-    }
+  }
 }
 
 
-template< typename TInputImage, typename TOutputValueType,
-          typename TCoordRep, typename TCoefficientType >
+template <typename TInputImage, typename TOutputValueType, typename TCoordRep, typename TCoefficientType>
 void
-BSplineGradientImageFilter< TInputImage, TOutputValueType,
-                            TCoordRep, TCoefficientType >
-::DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread)
+BSplineGradientImageFilter<TInputImage, TOutputValueType, TCoordRep, TCoefficientType>::DynamicThreadedGenerateData(
+  const OutputImageRegionType & outputRegionForThread)
 {
   typename OutputImageType::Pointer outputPtr = this->GetOutput();
 
-  if( !outputPtr )
-    {
+  if (!outputPtr)
+  {
     return;
-    }
+  }
 
   // this filter requires the all of the input image to be in
   // the buffer
-  InputImagePointer inputPtr = const_cast< TInputImage * >( this->GetInput() );
+  InputImagePointer       inputPtr = const_cast<TInputImage *>(this->GetInput());
   InterpolatorPointerType interpolator = InterpolatorType::New();
   // This will calculate the coefficients.
-  interpolator->SetInputImage( inputPtr );
+  interpolator->SetInputImage(inputPtr);
 
-  using IteratorType = typename itk::ImageRegionIteratorWithIndex< OutputImageType >;
+  using IteratorType = typename itk::ImageRegionIteratorWithIndex<OutputImageType>;
   typename OutputImageType::IndexType            index;
   typename InterpolatorType::ContinuousIndexType contIndex;
   unsigned int                                   i;
-  IteratorType it( outputPtr, outputRegionForThread );
+  IteratorType                                   it(outputPtr, outputRegionForThread);
 
-  for( it.GoToBegin(); !it.IsAtEnd(); ++it )
-    {
+  for (it.GoToBegin(); !it.IsAtEnd(); ++it)
+  {
     index = it.GetIndex();
-    for( i = 0; i < ImageDimension; ++i )
-      {
-      contIndex[i] = static_cast< CoordRepType >( index[i] );
-      }
-    it.Set( interpolator->EvaluateDerivativeAtContinuousIndex( contIndex ) );
+    for (i = 0; i < ImageDimension; ++i)
+    {
+      contIndex[i] = static_cast<CoordRepType>(index[i]);
     }
+    it.Set(interpolator->EvaluateDerivativeAtContinuousIndex(contIndex));
+  }
 }
 
 } // end namespace itk
