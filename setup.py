@@ -46,6 +46,6 @@ setup(
     keywords='ITK InsightToolkit Image-Gradient B-spline',
     url=r'https://github.com/InsightSoftwareConsortium/ITKBSplineGradient',
     install_requires=[
-        r'itk>=5.0.1'
+        r'itk>=5.1.0.post2'
     ]
     )
