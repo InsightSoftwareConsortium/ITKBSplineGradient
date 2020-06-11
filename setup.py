@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name='itk-bsplinegradient',
-    version='0.2.0',
+    version='0.2.1',
     author='Matthew McCormick',
     author_email='matt.mccormick@kitware.com',
     packages=['itk'],
