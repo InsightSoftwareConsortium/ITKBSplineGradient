@@ -1,9 +1,7 @@
 ITKBSplineGradient
 ==================
 
-.. image:: https://dev.azure.com/ITKBSplineGradient/ITKBSplineGradient/_apis/build/status/InsightSoftwareConsortium.ITKBSplineGradient?branchName=master
-    :target: https://dev.azure.com/ITKBSplineGradient/ITKBSplineGradient/_build/latest?definitionId=1&branchName=master
-    :alt: Build status
+.. image:: https://github.com/InsightSoftwareConsortium/ITKBSplineGradient/workflows/Build,%20test,%20package/badge.svg
 
 Overview
 --------
