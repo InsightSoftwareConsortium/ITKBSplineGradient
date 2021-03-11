@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name='itk-bsplinegradient',
-    version='0.2.2',
+    version='0.2.3',
     author='Matthew McCormick',
     author_email='matt.mccormick@kitware.com',
     packages=['itk'],
@@ -46,6 +46,6 @@ setup(
     keywords='ITK InsightToolkit Image-Gradient B-spline',
     url=r'https://github.com/InsightSoftwareConsortium/ITKBSplineGradient',
     install_requires=[
-        r'itk>=v5.2rc01'
+        r'itk>=v5.2rc03'
     ]
     )
