@@ -56,7 +56,7 @@ jobs:
         cd ..
         mkdir ITK-build
         cd ITK-build
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_TESTING:BOOL=OFF -DModule_MeshToPolyData:BOOL=ON -GNinja ../ITK
         ninja
 
     - name: Build ITK
@@ -66,7 +66,7 @@ jobs:
         mkdir ITK-build
         cd ITK-build
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_TESTING:BOOL=OFF -DModule_MeshToPolyData:BOOL=ON -GNinja ../ITK
         ninja
       shell: cmd
 
@@ -157,6 +157,18 @@ jobs:
     - name: 'Build 🐍 Python 📦 package'
       run: |
         export ITK_PACKAGE_VERSION=${{ env.itk-wheel-tag }}
+        pwd
+        git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData.git
+        echo "Building ITKMeshToPolyData dependency"
+        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKMeshToPolyData
+        pushd ITKMeshToPolyData
+        git checkout ${{env.ITKMeshToPolyData-git-tag}}
+        ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKMeshToPolyData/include/* include/
+        rm ./ITKMeshToPolyData/ITKPythonBuilds-linux.tar.zst
+        mv ./ITKMeshToPolyData/ITKPythonPackage .
+        echo "Building ITKBSplineGradient"
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
 
     - name: Publish Python package as GitHub Artifact
@@ -189,6 +201,17 @@ jobs:
       run: |
         export ITK_PACKAGE_VERSION=${{ env.itk-wheel-tag }}
         export MACOSX_DEPLOYMENT_TARGET=10.9
+        pwd
+        git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData
+        echo "Building ITKMeshToPolyData dependency"
+        cp ./macpython-download-cache-and-build-module-wheels.sh ITKMeshToPolyData/
+        pushd ITKMeshToPolyData
+        git checkout ${{env.ITKMeshToPolyData-git-tag}}
+        ./macpython-download-cache-and-build-module-wheels.sh
+        popd
+        cp ITKMeshToPolyData/include/* include/
+        rm ./ITKMeshToPolyData/ITKPythonBuilds-macosx.tar.zst
+        echo "Building ITKBSplineGradient"
         ./macpython-download-cache-and-build-module-wheels.sh
 
     - name: Publish Python package as GitHub Artifact
@@ -222,13 +245,15 @@ jobs:
       shell: bash
       run: |
         mv im ../../
-        cd ../../
+        cd ../../im
         curl -L "https://github.com/InsightSoftwareConsortium/ITKPythonBuilds/releases/download/${{ env.itk-wheel-tag }}/ITKPythonBuilds-windows.zip" -o "ITKPythonBuilds-windows.zip"
         7z x ITKPythonBuilds-windows.zip -o/c/P -aoa -r
         curl -L "https://data.kitware.com/api/v1/file/5c0ad59d8d777f2179dd3e9c/download" -o "doxygen-1.8.11.windows.bin.zip"
         7z x doxygen-1.8.11.windows.bin.zip -o/c/P/doxygen -aoa -r
         curl -L "https://data.kitware.com/api/v1/file/5bbf87ba8d777f06b91f27d6/download/grep-win.zip" -o "grep-win.zip"
         7z x grep-win.zip -o/c/P/grep -aoa -r
+        pwd
+        git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData.git
 
     - name: 'Build 🐍 Python 📦 package'
       shell: cmd
@@ -238,6 +263,14 @@ jobs:
         set PATH=C:\P\grep;%PATH%
         set CC=cl.exe
         set CXX=cl.exe
+        pwd
+        echo "Building ITKMeshToPolyData dependency"
+        cd ITKMeshToPolyData
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKMeshToPolyData-git-tag}}
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKMeshToPolyData/include/* include/
+        echo "Building ITKBSplineGradient"
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
 
     - name: Publish Python package as GitHub Artifact
