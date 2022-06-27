@@ -17,6 +17,7 @@ itk_module(BSplineGradient
     ITKMesh
   COMPILE_DEPENDS
     ITKImageGrid
+    MeshToPolyData
   TEST_DEPENDS
     ITKTestKernel
     ITKMetaIO
