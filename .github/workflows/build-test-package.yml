@@ -168,7 +168,7 @@ jobs:
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKMeshToPolyData/include/* include/
-        rm ./ITKMeshToPolyData/ITKPythonBuilds-linux.tar.zst
+        rm -f ./ITKMeshToPolyData/ITKPythonBuilds-linux.tar.zst
         mv ./ITKMeshToPolyData/ITKPythonPackage .
         echo "Building ITKBSplineGradient"
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
@@ -212,7 +212,7 @@ jobs:
         ./macpython-download-cache-and-build-module-wheels.sh
         popd
         cp ITKMeshToPolyData/include/* include/
-        rm ./ITKMeshToPolyData/ITKPythonBuilds-macosx.tar.zst
+        rm -f ./ITKMeshToPolyData/ITKPythonBuilds-macosx.tar.zst
         echo "Building ITKBSplineGradient"
         ./macpython-download-cache-and-build-module-wheels.sh
 
