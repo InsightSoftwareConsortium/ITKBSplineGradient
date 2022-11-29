@@ -3,9 +3,9 @@ name: Build, test, package
 on: [push,pull_request]
 
 env:
-  itk-git-tag: "abf5fa10522a36bc51f42f20f426a622f42ed90d"
-  itk-wheel-tag: "v5.3rc04.post4" # Same ITK C++ reference commit, different tag name
-  ITKMeshToPolyData-git-tag: "v0.9.2"
+  itk-git-tag: "v5.3.0"
+  itk-wheel-tag: "v5.3.0"
+  ITKMeshToPolyData-git-tag: "v0.10.0"
 
 jobs:
   build-test-cxx:
@@ -233,7 +233,7 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        python-version-minor: [7, 8, 9, 10]
+        python-version-minor: ["7", "8", "9", "10", "11"]
 
     steps:
     - name: Get specific version of CMake, Ninja
@@ -260,6 +260,16 @@ jobs:
         7z x doxygen-1.8.11.windows.bin.zip -o/c/P/doxygen -aoa -r
         curl -L "https://data.kitware.com/api/v1/file/5bbf87ba8d777f06b91f27d6/download/grep-win.zip" -o "grep-win.zip"
         7z x grep-win.zip -o/c/P/grep -aoa -r
+
+        ITK_PYTHON_PACKAGE_TAG="0f5effc39afbf7cb1ac5ab20faa0996ddb12b34d"
+        echo "Updating ITKPythonPackage build scripts to ${ITK_PYTHON_PACKAGE_TAG}"
+        pushd /c/P/IPP
+        git remote add InsightSoftwareConsortium https://github.com/InsightSoftwareConsortium/ITKPythonPackage.git --tags
+        git fetch InsightSoftwareConsortium
+        git checkout ${ITK_PYTHON_PACKAGE_TAG}
+        git status
+        popd
+
         pwd
         git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData.git
 
