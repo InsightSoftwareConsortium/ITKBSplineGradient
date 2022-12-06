@@ -9,12 +9,12 @@ env:
 
 jobs:
   cxx-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@04bfa542839e7d75ab4a40b73453632416703d44
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@567749a012622edcf318b4584f5284c657b42684
     with:
       itk-module-deps: 'MeshToPolyData@v0.10.0'
       
   python-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@04bfa542839e7d75ab4a40b73453632416703d44
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@567749a012622edcf318b4584f5284c657b42684
     with:
       itk-module-deps: 'InsightSoftwareConsortium/ITKMeshToPolyData@v0.10.0'
     secrets:
