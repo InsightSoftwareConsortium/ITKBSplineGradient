@@ -9,13 +9,12 @@ env:
 
 jobs:
   cxx-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@412c5b122f92b7b491d93298e8f69310ad5bf9d1
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@8fc1b954dd8c1aae04c1a01637c2553f4ef633a2
     with:
       itk-module-deps: 'MeshToPolyData@v0.10.0'
-      itk-cmake-options: '-DModule_MeshToPolyData:BOOL=ON -DModule_MeshToPolyData_GIT_TAG:STRING=v0.10.0'
       
   python-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@412c5b122f92b7b491d93298e8f69310ad5bf9d1
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@8fc1b954dd8c1aae04c1a01637c2553f4ef633a2
     with:
       itk-module-deps: 'InsightSoftwareConsortium/ITKMeshToPolyData@v0.10.0'
       itk-python-package-org: 'tbirdso'
