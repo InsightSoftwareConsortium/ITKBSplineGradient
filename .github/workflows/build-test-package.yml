@@ -12,6 +12,7 @@ jobs:
     uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@412c5b122f92b7b491d93298e8f69310ad5bf9d1
     with:
       itk-module-deps: 'MeshToPolyData@v0.10.0'
+      itk-cmake-options: '-DModule_MeshToPolyData:BOOL=ON -DModule_MeshToPolyData_GIT_TAG:STRING=v0.10.0'
       
   python-build-workflow:
     uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@412c5b122f92b7b491d93298e8f69310ad5bf9d1
