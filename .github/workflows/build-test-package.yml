@@ -1,15 +1,22 @@
 name: Build, test, package
 
-on: [push,pull_request]
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
 
 jobs:
   cxx-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@fed6f13d145960999e479784df8794df6acb7421
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@v5.4.3
     with:
       itk-module-deps: 'MeshToPolyData@v0.11.1'
-      
   python-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@fed6f13d145960999e479784df8794df6acb7421
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@v5.4.3
     with:
       itk-module-deps: 'InsightSoftwareConsortium/ITKMeshToPolyData@v0.11.1'
     secrets:
