@@ -68,8 +68,7 @@ public:
   /** Convenient type alias for simplifying declarations. */
   using InputPointSetType = TInputPointSet;
   using InputPointSetPointer = typename InputPointSetType::Pointer;
-  using OutputImageType = Image<CovariantVector<TOutputValueType, Self::ImageDimension>,
-                                Self::ImageDimension>;
+  using OutputImageType = Image<CovariantVector<TOutputValueType, Self::ImageDimension>, Self::ImageDimension>;
   using OutputImagePointer = typename OutputImageType::Pointer;
 
   /** Standard class type alias. */
