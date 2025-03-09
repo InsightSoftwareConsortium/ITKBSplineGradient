@@ -4,13 +4,13 @@ on: [push,pull_request]
 
 jobs:
   cxx-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@30c37d7e056c9bf450738fde055d04111f0f8b1a
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@v5.4.2
     with:
-      itk-module-deps: 'MeshToPolyData@v0.10.0'
+      itk-module-deps: 'MeshToPolyData@v0.11.1'
       
   python-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@30c37d7e056c9bf450738fde055d04111f0f8b1a
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@v5.4.2
     with:
-      itk-module-deps: 'InsightSoftwareConsortium/ITKMeshToPolyData@v0.10.0'
+      itk-module-deps: 'InsightSoftwareConsortium/ITKMeshToPolyData@v0.11.1'
     secrets:
       pypi_password: ${{ secrets.pypi_password }}
