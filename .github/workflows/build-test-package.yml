@@ -18,6 +18,8 @@ jobs:
   python-build-workflow:
     uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@v5.4.6
     with:
+      itk-wheel-tag: 'v5.4.5'
+      itk-python-package-tag: 'v5.4.5'
       itk-module-deps: 'InsightSoftwareConsortium/ITKMeshToPolyData@v0.11.1'
     secrets:
       pypi_password: ${{ secrets.pypi_password }}
